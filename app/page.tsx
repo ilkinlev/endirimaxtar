@@ -1,8 +1,8 @@
 "use client";
+import Link from "next/link";
 import Image from "next/image";
-import Getproduct from "./productInfo";
-import Search from "./search";
-import ProductList from "./productlist";
+import Search from "./components/Search";
+import ProductList from "./components/ProductList";
 export default function Home() {
   return (
     <>
@@ -15,7 +15,9 @@ export default function Home() {
 
         <div className="flex items-center space-x-4">
           <button type="submit" className="cursor-pointer">
-            <Image src="userIco.svg" alt="UserIcon" width={25} height={25} />
+            <Link href="/userlogin" rel="noopener noreferrer">
+              <Image src="userIco.svg" alt="UserIcon" width={25} height={25} />
+            </Link>
           </button>
           <button type="submit" className="cursor-pointer">
             <Image
@@ -33,11 +35,6 @@ export default function Home() {
           <Search onSearch={(value) => console.log("Arama değeri:", value)} />
         </div>
         <div>
-          <Getproduct />
-          <Getproduct />
-          <Getproduct />
-          <Getproduct />
-          <Getproduct />
           <ProductList />
         </div>
       </main>
