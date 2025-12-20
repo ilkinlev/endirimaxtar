@@ -1,0 +1,108 @@
+[
+  {
+    "id": "1",
+    "name": "Azersun Süd 1L",
+    "category": "Süd Məhsulları",
+    "brand": "Azersun",
+    "image": "/images/milk.jpg",
+    "stores": [
+      {
+        "name": "Bravo",
+        "price": 2.5,
+        "inStock": true
+      },
+      {
+        "name": "BazarStore",
+        "price": 2.4,
+        "discount": 10,
+        "inStock": true
+      },
+      {
+        "name": "Oba",
+        "price": 2.6,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Təndir Çörək Ağ",
+    "category": "Çörək",
+    "brand": "Təndir",
+    "image": "/images/bread.jpg",
+    "stores": [
+      {
+        "name": "Bravo",
+        "price": 0.8,
+        "inStock": true
+      },
+      {
+        "name": "BazarStore",
+        "price": 0.75,
+        "inStock": true
+      },
+      {
+        "name": "Al Market",
+        "price": 0.85,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "Yumurta 10 ədəd",
+    "category": "Yumurta",
+    "image": "/images/eggs.jpg",
+    "stores": [
+      {
+        "name": "Bravo",
+        "price": 5.0,
+        "inStock": true
+      },
+      {
+        "name": "Oba",
+        "price": 4.8,
+        "discount": 5,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "Kartof 1kg",
+    "category": "Tərəvəz",
+    "image": "/images/potato.jpg",
+    "stores": [
+      {
+        "name": "BazarStore",
+        "price": 1.2,
+        "inStock": true
+      },
+      {
+        "name": "Oba",
+        "price": 1.3,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "Həsənbəy Düyü 1kg",
+    "category": "Taxıl",
+    "brand": "Həsənbəy",
+    "image": "/images/rice.jpg",
+    "stores": [
+      {
+        "name": "Bravo",
+        "price": 3.5,
+        "inStock": true
+      },
+      {
+        "name": "Al Market",
+        "price": 3.4,
+        "discount": 8,
+        "inStock": true
+      }
+    ]
+  }
+]

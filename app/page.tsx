@@ -1,43 +1,27 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
-import Search from "./components/Search";
-import ProductList from "./components/ProductList";
+
+import Header from "./components/Header";
+import SearchBar from "./components/SearchBar";
+import ProductCard from "./components/ProductCard";
+import products from "./data/products.json";
+
 export default function Home() {
   return (
-    <>
-      <header className="flex items-center justify-between px-6 py-4 border-b">
-        <div className="text-6xl font-bold text-red-500">
-          Endirim<span className="text-white">Axtar</span>
-        </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      <Header />
+      <SearchBar />
 
-        <div className="flex-1 flex justify-center"></div>
+      <main className="container mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold mb-6 dark:text-white">
+          Populyar Məhsullar
+        </h2>
 
-        <div className="flex items-center space-x-4">
-          <button type="submit" className="cursor-pointer">
-            <Link href="/userlogin" rel="noopener noreferrer">
-              <Image src="userIco.svg" alt="UserIcon" width={25} height={25} />
-            </Link>
-          </button>
-          <button type="submit" className="cursor-pointer">
-            <Image
-              src="notificationIco.svg"
-              alt="NotificationIco"
-              width={25}
-              height={25}
-            />
-          </button>
-        </div>
-      </header>
-
-      <main className="">
-        <div className="flex items-center justify-center py-5">
-          <Search onSearch={(value) => console.log("Arama değeri:", value)} />
-        </div>
-        <div>
-          <ProductList />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </main>
-    </>
+    </div>
   );
 }
