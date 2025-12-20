@@ -52,7 +52,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Compare Button */}
-        <button className="w-full mt-3 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">
+        <button className="w-full mt-3 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors hover:cursor-pointer">
           Qiymətləri müqayisə et
         </button>
       </div>

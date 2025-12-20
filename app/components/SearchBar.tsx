@@ -6,7 +6,7 @@ export default function SearchBar() {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="bg-gray-800 dark:bg-gray-900 py-6 transition-colors">
+    <div className="py-6">
       <div className="container mx-auto px-4">
         <div className="relative max-w-2xl mx-auto">
           <input
@@ -14,9 +14,9 @@ export default function SearchBar() {
             placeholder="Axtar..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-3 pr-12 rounded-lg bg-white dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 pr-12 rounded-lg bg-neutral-200 dark:bg-gray-700 dark:text-white dark:placeholder-neutral-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+          <button className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:cursor-pointer">
             <svg
               className="w-6 h-6"
               fill="none"

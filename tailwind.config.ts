@@ -1,12 +1,12 @@
 import type { Config } from "tailwindcss";
 
-export default {
+const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class", // 👈 Make sure this is here!
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -15,5 +15,8 @@ export default {
       },
     },
   },
+  // Plugins kısmının boş bir array olduğundan emin olun
   plugins: [],
-} satisfies Config;
+};
+
+export default config;

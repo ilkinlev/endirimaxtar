@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 
 export function useDarkMode() {
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Check localStorage and system preference on mount
     const saved = localStorage.getItem("darkMode");
     const isDarkMode =
@@ -29,7 +31,13 @@ export function useDarkMode() {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("darkMode", "false");
     }
+
+    console.log("Dark mode toggled to:", newValue);
   };
+
+  if (!mounted) {
+    return { isDark: false, toggle: () => {} };
+  }
 
   return { isDark, toggle };
 }

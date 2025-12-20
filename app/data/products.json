@@ -51,6 +51,7 @@
   {
     "id": "3",
     "name": "Yumurta 10 ədəd",
+    "brand": "Haciqabul",
     "category": "Yumurta",
     "image": "/images/eggs.jpg",
     "stores": [
