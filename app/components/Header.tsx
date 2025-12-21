@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Header() {
   const [isDark, setIsDark] = useState(false);
@@ -35,18 +36,29 @@ export default function Header() {
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm transition-colors">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <h1 className="text-3xl font-bold">
-          <span className="text-red-500">Endirim</span>
-          <span className="text-gray-800 dark:text-white">Axtar</span>
-        </h1>
+        <Link href="/">
+          <h1 className="text-3xl font-bold cursor-pointer">
+            <span className="text-red-500">Endirim</span>
+            <span className="text-gray-800 dark:text-white">Axtar</span>
+          </h1>
+        </Link>
 
-        <button
-          onClick={toggle}
-          className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer"
-          aria-label="Toggle Dark Mode"
-        >
-          {isDark ? "☀️" : "🌙"}
-        </button>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/about"
+            className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+          >
+            Haqqımızda
+          </Link>
+
+          <button
+            onClick={toggle}
+            className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+            aria-label="Toggle Dark Mode"
+          >
+            {isDark ? "☀️" : "🌙"}
+          </button>
+        </div>
       </div>
     </header>
   );

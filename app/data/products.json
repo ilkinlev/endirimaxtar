@@ -4,7 +4,7 @@
     "name": "Azersun Süd 1L",
     "category": "Süd Məhsulları",
     "brand": "Azersun",
-    "image": "/images/milk.jpg",
+    "image": "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&h=400&fit=crop",
     "stores": [
       {
         "name": "Bravo",
@@ -29,7 +29,7 @@
     "name": "Təndir Çörək Ağ",
     "category": "Çörək",
     "brand": "Təndir",
-    "image": "/images/bread.jpg",
+    "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=400&fit=crop",
     "stores": [
       {
         "name": "Bravo",
@@ -51,9 +51,8 @@
   {
     "id": "3",
     "name": "Yumurta 10 ədəd",
-    "brand": "Haciqabul",
     "category": "Yumurta",
-    "image": "/images/eggs.jpg",
+    "image": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400&h=400&fit=crop",
     "stores": [
       {
         "name": "Bravo",
@@ -72,7 +71,7 @@
     "id": "4",
     "name": "Kartof 1kg",
     "category": "Tərəvəz",
-    "image": "/images/potato.jpg",
+    "image": "https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&h=400&fit=crop",
     "stores": [
       {
         "name": "BazarStore",
@@ -91,7 +90,7 @@
     "name": "Həsənbəy Düyü 1kg",
     "category": "Taxıl",
     "brand": "Həsənbəy",
-    "image": "/images/rice.jpg",
+    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&h=400&fit=crop",
     "stores": [
       {
         "name": "Bravo",
@@ -101,7 +100,101 @@
       {
         "name": "Al Market",
         "price": 3.4,
-        "discount": 8,
+        "discount": 52,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "Pomidor 1kg",
+    "category": "Tərəvəz",
+    "image": "https://images.unsplash.com/photo-1582284540020-8acbe03f4924?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "stores": [
+      {
+        "name": "Bravo",
+        "price": 2.0,
+        "inStock": true
+      },
+      {
+        "name": "BazarStore",
+        "price": 1.9,
+        "discount": 5,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "7",
+    "name": "Toyuq Əti 1kg",
+    "category": "Ət",
+    "image": "https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400&h=400&fit=crop",
+    "stores": [
+      {
+        "name": "Bravo",
+        "price": 8.5,
+        "inStock": true
+      },
+      {
+        "name": "Oba",
+        "price": 8.2,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "8",
+    "name": "Pepsi 1.5L",
+    "category": "İçkilər",
+    "brand": "Pepsi",
+    "image": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=400&h=400&fit=crop",
+    "stores": [
+      {
+        "name": "Bravo",
+        "price": 1.8,
+        "inStock": true
+      },
+      {
+        "name": "BazarStore",
+        "price": 1.6,
+        "discount": 15,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "9",
+    "name": "Pendir 250g",
+    "category": "Süd Məhsulları",
+    "image": "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=400&h=400&fit=crop",
+    "stores": [
+      {
+        "name": "Bravo",
+        "price": 4.0,
+        "inStock": true
+      },
+      {
+        "name": "Oba",
+        "price": 3.8,
+        "inStock": true
+      }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "Alma 1kg",
+    "category": "Meyvə",
+    "image": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400&h=400&fit=crop",
+    "stores": [
+      {
+        "name": "BazarStore",
+        "price": 2.5,
+        "inStock": true
+      },
+      {
+        "name": "Oba",
+        "price": 2.3,
+        "discount": 10,
         "inStock": true
       }
     ]
