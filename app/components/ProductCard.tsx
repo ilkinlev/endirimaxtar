@@ -1,14 +1,17 @@
 import { Product, Store } from "./ProductList";
 
-export default function ProductCard({ product }: { product: Product }) {
-  // Fix: Add types to parameters
+interface ProductCardProps {
+  product: Product;
+  onCompare: (product: Product) => void;
+}
+
+export default function ProductCard({ product, onCompare }: ProductCardProps) {
   const cheapestStore = product.stores.reduce((min: Store, store: Store) =>
     store.price < min.price ? store : min
   );
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow">
-      {/* Product Image */}
       <div className="relative h-48 bg-gray-200 dark:bg-gray-700 rounded-md mb-3">
         <img
           src={product.image}
@@ -22,7 +25,6 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      {/* Product Info */}
       <div>
         <h3 className="font-bold text-lg mb-1 dark:text-white">
           {product.name}
@@ -36,7 +38,6 @@ export default function ProductCard({ product }: { product: Product }) {
           {product.category}
         </p>
 
-        {/* Price Info */}
         <div className="border-t dark:border-gray-700 pt-3">
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
             Ən ucuz:
@@ -51,8 +52,10 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
 
-        {/* Compare Button */}
-        <button className="w-full mt-3 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors hover:cursor-pointer">
+        <button
+          onClick={() => onCompare(product)}
+          className="w-full mt-3 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+        >
           Qiymətləri müqayisə et
         </button>
       </div>

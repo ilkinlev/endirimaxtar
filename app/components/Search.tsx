@@ -1,50 +1,79 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
 
-export type SearchProps = {
-  onSearch: (value: string) => void;
-};
+import { useState } from "react";
 
-const Search = (props: SearchProps) => {
-  const { onSearch } = props;
-  const [value, setValue] = useState("Axtar...");
+interface SearchBarProps {
+  onSearch: (query: string) => void;
+}
 
-  const searchHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    const { target } = event;
-    setValue(target.value);
-  };
+export default function SearchBar({ onSearch }: SearchBarProps) {
+  const [search, setSearch] = useState("");
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      // Here, we call the onSearch function and pass the value
-      onSearch(value);
-    }
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    onSearch(value.toLowerCase());
   };
 
   return (
-    <div className="flex  items-center bg-gray-800 rounded-full px-3 py-2 w-full max-w-xs text-white">
-      <input
-        type="search"
-        name="search"
-        placeholder={value}
-        className="bg-gray-800 text-sm focus:outline-none w-full"
-        onChange={searchHandler}
-        onKeyDown={handleKeyDown}
-      />
-      <svg
-        className="h-4 w-4 text-gray-400 ml-2 cursor-pointer"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-      >
-        <path
-          fillRule="evenodd"
-          d="M13.53 14.47a8 8 0 111.414-1.414l3.96 3.96a1 1 0 01-1.414 1.414l-3.96-3.96zM8 14a6 6 0 100-12 6 6 0 000 12z"
-          clipRule="evenodd"
-        />
-      </svg>
+    <div className=" from-gray-700 to-gray-800 dark:from-gray-800 dark:to-gray-900 py-8 transition-colors">
+      <div className="container mx-auto px-4">
+        <div className="relative max-w-2xl mx-auto">
+          <input
+            type="text"
+            placeholder="Məhsul, marka və ya mağaza axtar..."
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full px-5 py-4 pr-24 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg"
+          />
+
+          {/* Search Icon */}
+          <button className="absolute right-14 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer transition-colors">
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+
+          {/* Clear Button */}
+          {search && (
+            <button
+              onClick={() => handleSearch("")}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+              title="Təmizlə"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* Search Tips */}
+        {search && (
+          <p className="text-center text-sm text-gray-300 dark:text-gray-400 mt-3">
+            "{search}" üçün axtarış edilir...
+          </p>
+        )}
+      </div>
     </div>
   );
-};
-
-export default Search;
+}
