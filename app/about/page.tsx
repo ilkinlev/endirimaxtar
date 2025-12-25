@@ -177,7 +177,7 @@ export default function AboutPage() {
               </li>
               <li>Heç bir marketi digərinə üstün tutmuruq</li>
               <li>
-                Məqsədimiz yalnız istehlakçılara <strong>dürüst məlumat</strong>{" "}
+                Məqsədimiz yalnız istehlakçılara <strong>düzgün məlumat</strong>{" "}
                 verməkdir
               </li>
             </ul>
@@ -205,10 +205,10 @@ export default function AboutPage() {
               <p className="font-bold text-lg dark:text-white">BazarStore</p>
             </div>
             <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <p className="font-bold text-lg dark:text-white">Oba</p>
+              <p className="font-bold text-lg dark:text-white">Araz Market</p>
             </div>
             <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <p className="font-bold text-lg dark:text-white">Al Market</p>
+              <p className="font-bold text-lg dark:text-white">Oba</p>
             </div>
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 text-center">
@@ -287,7 +287,7 @@ export default function AboutPage() {
             deyil. Tamamilə müstəqil platformayıq.
           </p>
           <p className="text-xs text-gray-500">
-            © 2024 EndirimAxtar. Bütün hüquqlar qorunur.
+            © 2025 EndirimAxtar. Bütün hüquqlar qorunur.
           </p>
         </div>
       </footer>
