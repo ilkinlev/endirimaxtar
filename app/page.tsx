@@ -5,6 +5,8 @@ import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
 import ProductCard from "./components/ProductCard";
 import ComparisonModal from "./components/ComparisonModal";
+import LegalDisclaimer from "./components/LegalDisclaimer";
+import Footer from "./components/Footer";
 import products from "./data/products.json";
 import { Product } from "./components/ProductList";
 
@@ -25,11 +27,13 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors flex flex-col">
       <Header />
       <SearchBar onSearch={setSearchQuery} />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex-grow">
+        <LegalDisclaimer />
+
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold dark:text-white">
             {searchQuery
@@ -53,12 +57,15 @@ export default function Home() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">
+            <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
               Heç bir məhsul tapılmadı 😔
+            </p>
+            <p className="text-sm text-gray-400 dark:text-gray-500 mb-4">
+              Başqa bir axtarış sözü cəhd edin
             </p>
             <button
               onClick={() => setSearchQuery("")}
-              className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
             >
               Bütün məhsulları göstər
             </button>
@@ -70,6 +77,8 @@ export default function Home() {
         product={selectedProduct}
         onClose={() => setSelectedProduct(null)}
       />
+
+      <Footer />
     </div>
   );
 }
