@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Footer() {
   const [showLegal, setShowLegal] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <footer className="bg-white dark:bg-gray-800 border-t dark:border-gray-700 mt-16">
@@ -140,9 +145,11 @@ export default function Footer() {
         {/* Copyright */}
         <div className="text-center text-xs text-gray-500 dark:text-gray-400">
           <p>© 2025 EndirimAxtar. Bütün hüquqlar qorunur.</p>
-          <p className="mt-1">
-            Son yenilənmə: {new Date().toLocaleDateString("az-AZ")}
-          </p>
+          {mounted && (
+            <p className="mt-1">
+              Son yenilənmə: {new Date().toLocaleDateString("az-AZ")}
+            </p>
+          )}
         </div>
       </div>
     </footer>

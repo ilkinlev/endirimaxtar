@@ -3,6 +3,7 @@ export interface Store {
   price: number;
   discount?: number;
   inStock: boolean;
+  storeId?: string; // Track original store product ID
 }
 
 export interface Product {
@@ -11,5 +12,9 @@ export interface Product {
   category: string;
   brand?: string;
   image: string;
+  validFrom?: string; // Promotion start date
+  validUntil?: string; // Promotion end date
+  isPromotional?: boolean; // Is this a promotional item?
+  lastUpdated?: string; // Last time data was updated
   stores: Store[];
 }
