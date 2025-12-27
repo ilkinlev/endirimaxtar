@@ -16,10 +16,10 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
   // We need to calculate the original price from it
   const storesWithPrices = product.stores.map((store) => {
     const finalPrice = store.price; // This is already the discount price
-    const originalPrice = store.discount
+    const originalPrice = store.discount 
       ? store.price / (1 - store.discount / 100) // Calculate original from discount
       : store.price;
-
+    
     return {
       ...store,
       finalPrice,
@@ -36,10 +36,7 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
   )}`;
 
   // Use fallback if image is empty or invalid
-  const imageUrl =
-    product.image && product.image.trim() !== ""
-      ? product.image
-      : fallbackImage;
+  const imageUrl = product.image && product.image.trim() !== "" ? product.image : fallbackImage;
 
   // Check if promotional period is still valid
   const isPromotionValid = () => {

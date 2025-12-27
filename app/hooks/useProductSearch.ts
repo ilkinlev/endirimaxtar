@@ -25,17 +25,16 @@ export function useProductSearch(
       keys: [
         { name: "name", weight: 1.0 }, // Product name ONLY (100% priority)
       ],
-      threshold: 0.1, // VERY strict matching (was 0.15)
-      distance: 30, // Very short distance between characters (was 50)
-      ignoreLocation: false,
-      location: 0,
+      threshold: 0.1, // Very strict matching (was 0.2)
+      distance: 50, // Maximum distance between characters (was 100)
+      ignoreLocation: false, // Prefer matches at start of string
+      location: 0, // Start searching from beginning
       includeScore: true,
-      minMatchCharLength: 4, // Require at least 4 characters to match (was 3)
+      minMatchCharLength: 3, // Require at least 3 characters
       useExtendedSearch: false,
       shouldSort: true,
       findAllMatches: false,
-      ignoreFieldNorm: true,
-      isCaseSensitive: false,
+      ignoreFieldNorm: true, // Don't penalize longer field names
     }),
     []
   );

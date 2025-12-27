@@ -13,14 +13,23 @@ export default function ComparisonModal({
 }: ComparisonModalProps) {
   if (!product) return null;
 
-  const storesWithFinalPrice = product.stores.map((store) => ({
-    ...store,
-    finalPrice: store.discount
-      ? store.price * (1 - store.discount / 100)
-      : store.price,
-  }));
+  // Calculate prices correctly
+  // The price in data is ALREADY the discounted price (final price)
+  // We need to calculate the original price from it
+  const storesWithPrices = product.stores.map((store) => {
+    const finalPrice = store.price; // This is already the discount price
+    const originalPrice = store.discount 
+      ? store.price / (1 - store.discount / 100) // Calculate original from discount
+      : store.price;
+    
+    return {
+      ...store,
+      finalPrice,
+      originalPrice,
+    };
+  });
 
-  const sortedStores = [...storesWithFinalPrice].sort(
+  const sortedStores = [...storesWithPrices].sort(
     (a, b) => a.finalPrice - b.finalPrice
   );
   const cheapestFinalPrice = sortedStores[0].finalPrice;
@@ -116,7 +125,7 @@ export default function ComparisonModal({
 
                       {store.discount && (
                         <p className="text-sm text-gray-500 dark:text-gray-400 line-through mt-1">
-                          Əvvəl: {store.price.toFixed(2)} ₼
+                          Əvvəl: {store.originalPrice.toFixed(2)} ₼
                         </p>
                       )}
                     </div>

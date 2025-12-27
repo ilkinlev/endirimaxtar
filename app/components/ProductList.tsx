@@ -1,22 +1,20 @@
 export interface Store {
   name: string;
+  price: number;
+  discount?: number;
   inStock: boolean;
-  originalPrice: number;
-  discountedPrice?: number;
-  discountRate?: number;
-  storeId?: string;
+  storeId?: string; // Track original store product ID
 }
 
 export interface Product {
   id: string;
   name: string;
   category: string;
-  image: string;
-  stores: Store[];
   brand?: string;
-  isPromotional?: boolean;
-  lastUpdated: string;
+  image: string;
+  validFrom?: string; // Promotion start date
+  validUntil?: string; // Promotion end date
+  isPromotional?: boolean; // Is this a promotional item?
+  lastUpdated?: string; // Last time data was updated
+  stores: Store[];
 }
-
-// The full output is an array of products
-export type ProductList = Product[];
