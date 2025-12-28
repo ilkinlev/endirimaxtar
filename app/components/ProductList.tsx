@@ -1,15 +1,22 @@
 export interface Store {
   name: string;
-  price: number;
-  discount?: number;
   inStock: boolean;
+  originalPrice: number;
+  discountedPrice?: number;
+  discountRate?: number;
+  storeId?: string;
 }
 
 export interface Product {
   id: string;
   name: string;
   category: string;
-  brand?: string;
   image: string;
   stores: Store[];
+  brand?: string;
+  isPromotional?: boolean;
+  lastUpdated: string;
 }
+
+// The full output is an array of products
+export type ProductList = Product[];
