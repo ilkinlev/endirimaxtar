@@ -1,5 +1,5 @@
 // utils/productUtils.ts
-import { Product, Store, CategoryCount } from "../components/ProductList";
+import { Product, Store } from "../components/ProductList";
 
 /**
  * Get the cheapest store for a product
@@ -70,21 +70,7 @@ export function filterProductsByCategories(
   );
 }
 
-/**
- * Get unique categories with product counts
- */
-export function getCategoriesWithCounts(products: Product[]): CategoryCount {
-  const counts: CategoryCount = {};
-
-  products.forEach((product: Product) => {
-    const category = product.category;
-    counts[category] = (counts[category] || 0) + 1;
-  });
-
-  return counts;
-}
-
-/**
+/**\
  * Get all unique categories sorted alphabetically
  */
 export function getUniqueCategories(products: Product[]): string[] {
