@@ -51,8 +51,8 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
 
   return (
     <div
-      onClick={() => onCompare(product)}
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all cursor-pointer group flex flex-col h-full"
+      // onClick={() => onCompare(product)}
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all group flex flex-col h-full"
     >
       <div className="relative h-48 bg-gray-200 dark:bg-gray-700 rounded-t-lg overflow-hidden">
         <img
@@ -172,7 +172,7 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
           </div>
         </div>
 
-        <button
+        {/* <button
           onClick={(e) => {
             e.stopPropagation();
             onCompare(product);
@@ -180,7 +180,7 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
           className="w-full mt-3 bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer font-medium shadow-md hover:shadow-lg"
         >
           Qiymətləri müqayisə et →
-        </button>
+        </button> */}
       </div>
     </div>
   );
