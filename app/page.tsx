@@ -21,7 +21,7 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  
+
   const observerTarget = useRef<HTMLDivElement>(null);
 
   // Simple but effective search - normalized for Azerbaijani characters
@@ -50,7 +50,10 @@ export default function Home() {
       score += 500;
     }
     // Name contains query at word boundary
-    else if (normalizedName.includes(` ${normalizedQuery}`) || normalizedName.includes(`-${normalizedQuery}`)) {
+    else if (
+      normalizedName.includes(` ${normalizedQuery}`) ||
+      normalizedName.includes(`-${normalizedQuery}`)
+    ) {
       score += 300;
     }
     // Name contains query anywhere
@@ -144,7 +147,10 @@ export default function Home() {
 
       console.log(`Loading products ${startIndex} to ${endIndex}`);
       console.log(`Found ${newProducts.length} products`);
-      console.log('Sample products:', newProducts.slice(0, 3).map(p => p.name));
+      console.log(
+        "Sample products:",
+        newProducts.slice(0, 3).map((p) => p.name)
+      );
 
       if (newProducts.length === 0) {
         setHasMore(false);
@@ -152,12 +158,12 @@ export default function Home() {
       } else {
         setDisplayedProducts((prev) => [...prev, ...newProducts]);
         setPage((prev) => prev + 1);
-        
+
         // Check if there are more products to load
         if (endIndex >= filteredProducts.length) {
           setHasMore(false);
         }
-        
+
         setLoading(false);
       }
     }, 300);
@@ -173,7 +179,11 @@ export default function Home() {
 
   // Load initial products after reset
   useEffect(() => {
-    if (displayedProducts.length === 0 && filteredProducts.length > 0 && !loading) {
+    if (
+      displayedProducts.length === 0 &&
+      filteredProducts.length > 0 &&
+      !loading
+    ) {
       loadMoreProducts();
     }
   }, [displayedProducts.length, filteredProducts.length, loading]);
@@ -206,7 +216,7 @@ export default function Home() {
       <Header />
       <SearchBar onSearch={setSearchQuery} />
 
-      <main className="container mx-auto px-4 py-8 flex-grow">
+      <main className="container mx-auto px-4 py-8 grow">
         <LegalDisclaimer />
 
         <div className="flex justify-between items-center mb-6">
@@ -216,7 +226,10 @@ export default function Home() {
               : "Populyar Məhsullar"}
           </h2>
           <span className="text-gray-600 dark:text-gray-400">
-            {displayedProducts.length > 0 ? displayedProducts.length : filteredProducts.length} məhsul
+            {displayedProducts.length > 0
+              ? displayedProducts.length
+              : filteredProducts.length}{" "}
+            məhsul
           </span>
         </div>
 
