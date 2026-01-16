@@ -8,14 +8,19 @@ import ComparisonModal from "./components/ComparisonModal";
 import LegalDisclaimer from "./components/LegalDisclaimer";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
+import CategoryFilter from "./components/CategoryFilter";
+import StoreFilter from "./components/StoreFilter";
 import { ProductSkeletonGrid } from "./components/ProductSkeleton";
-import products from "./data/products.json";
+import productsData from "./data/products.json";
 import { Product } from "./components/ProductList";
+import { useProductSearch } from "./hooks/useProductSearch";
 
 const PRODUCTS_PER_PAGE = 24; // 4 columns x 6 rows
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedStores, setSelectedStores] = useState<string[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
@@ -24,114 +29,84 @@ export default function Home() {
 
   const observerTarget = useRef<HTMLDivElement>(null);
 
-  // Simple but effective search - normalized for Azerbaijani characters
-  const normalizeText = (text: string): string => {
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "") // Remove accents
-      .trim();
-  };
+  // Products are already merged at build time!
+  const products = productsData as Product[];
 
-  // Calculate relevance score for sorting
-  const calculateRelevance = (product: Product, query: string): number => {
-    let score = 0;
-    const normalizedQuery = normalizeText(query);
-    const normalizedName = normalizeText(product.name);
-    const normalizedCategory = normalizeText(product.category);
-    const normalizedBrand = product.brand ? normalizeText(product.brand) : "";
-
-    // Exact match in name (highest priority)
-    if (normalizedName === normalizedQuery) {
-      score += 1000;
-    }
-    // Name starts with query (very high priority)
-    else if (normalizedName.startsWith(normalizedQuery)) {
-      score += 500;
-    }
-    // Name contains query at word boundary
-    else if (
-      normalizedName.includes(` ${normalizedQuery}`) ||
-      normalizedName.includes(`-${normalizedQuery}`)
-    ) {
-      score += 300;
-    }
-    // Name contains query anywhere
-    else if (normalizedName.includes(normalizedQuery)) {
-      score += 100;
-    }
-
-    // Brand exact match
-    if (normalizedBrand === normalizedQuery) {
-      score += 200;
-    }
-    // Brand starts with query
-    else if (normalizedBrand.startsWith(normalizedQuery)) {
-      score += 150;
-    }
-    // Brand contains query
-    else if (normalizedBrand.includes(normalizedQuery)) {
-      score += 50;
-    }
-
-    // Category match
-    if (normalizedCategory.includes(normalizedQuery)) {
-      score += 30;
-    }
-
-    // Store name match
-    product.stores.forEach((store) => {
-      const normalizedStoreName = normalizeText(store.name);
-      if (normalizedStoreName.includes(normalizedQuery)) {
-        score += 10;
-      }
+  // Get all unique categories
+  const allCategories = useMemo(() => {
+    const categories = new Set<string>();
+    products.forEach((product) => {
+      categories.add(product.category);
     });
+    return Array.from(categories).sort();
+  }, [products]);
 
-    // Boost promotional items slightly
-    if (product.isPromotional) {
-      score += 5;
-    }
-
-    return score;
-  };
-
-  // Filter and sort products with normalized search
-  const filteredProducts = useMemo(() => {
-    if (!searchQuery || searchQuery.trim() === "") {
-      return products as Product[];
-    }
-
-    const normalizedQuery = normalizeText(searchQuery);
-
-    // Filter products that match
-    const matchedProducts = (products as Product[]).filter((product) => {
-      const normalizedName = normalizeText(product.name);
-      const normalizedCategory = normalizeText(product.category);
-      const normalizedBrand = product.brand ? normalizeText(product.brand) : "";
-
-      // Check product name, category, brand
-      if (
-        normalizedName.includes(normalizedQuery) ||
-        normalizedCategory.includes(normalizedQuery) ||
-        normalizedBrand.includes(normalizedQuery)
-      ) {
-        return true;
-      }
-
-      // Check store names
-      return product.stores.some((store) => {
-        const normalizedStoreName = normalizeText(store.name);
-        return normalizedStoreName.includes(normalizedQuery);
+  // Get all unique stores
+  const allStores = useMemo(() => {
+    const stores = new Set<string>();
+    products.forEach((product) => {
+      product.stores.forEach((store) => {
+        stores.add(store.name);
       });
     });
+    return Array.from(stores).sort();
+  }, [products]);
 
-    // Sort by relevance score
-    return matchedProducts.sort((a, b) => {
-      const scoreA = calculateRelevance(a, searchQuery);
-      const scoreB = calculateRelevance(b, searchQuery);
-      return scoreB - scoreA; // Higher score first
+  // Use Fuse.js for smart fuzzy search
+  const searchResults = useProductSearch(products, searchQuery);
+
+  // Filter by selected categories and stores
+  const filteredProducts = useMemo(() => {
+    let result = searchResults;
+
+    // Filter by categories
+    if (selectedCategories.length > 0) {
+      result = result.filter((product) =>
+        selectedCategories.includes(product.category)
+      );
+    }
+
+    // Filter by stores - Show ONLY products that have stores exclusively from selected ones
+    if (selectedStores.length > 0) {
+      result = result.filter((product) =>
+        // Check if ALL stores in the product are in the selected stores list
+        product.stores.every((store) => selectedStores.includes(store.name))
+      );
+    }
+
+    return result;
+  }, [searchResults, selectedCategories, selectedStores]);
+
+  // Calculate product counts per category
+  const categoryCounts = useMemo(() => {
+    const counts: { [key: string]: number } = {
+      "": products.length, // Total count
+    };
+
+    allCategories.forEach((category) => {
+      counts[category] = products.filter((p) => p.category === category).length;
     });
-  }, [searchQuery]);
+
+    return counts;
+  }, [allCategories, products]);
+
+  // Calculate product counts per store
+  const storeCounts = useMemo(() => {
+    const counts: { [key: string]: number } = {};
+
+    allStores.forEach((store) => {
+      counts[store] = products.filter((p) =>
+        p.stores.some((s) => s.name === store)
+      ).length;
+    });
+
+    return counts;
+  }, [allStores, products]);
+
+  // Handle product comparison
+  const handleCompareProduct = useCallback((product: Product) => {
+    setSelectedProduct(product);
+  }, []);
 
   // Load more products
   const loadMoreProducts = useCallback(() => {
@@ -144,13 +119,6 @@ export default function Home() {
       const startIndex = (page - 1) * PRODUCTS_PER_PAGE;
       const endIndex = startIndex + PRODUCTS_PER_PAGE;
       const newProducts = filteredProducts.slice(startIndex, endIndex);
-
-      console.log(`Loading products ${startIndex} to ${endIndex}`);
-      console.log(`Found ${newProducts.length} products`);
-      console.log(
-        "Sample products:",
-        newProducts.slice(0, 3).map((p) => p.name)
-      );
 
       if (newProducts.length === 0) {
         setHasMore(false);
@@ -169,13 +137,13 @@ export default function Home() {
     }, 300);
   }, [page, loading, hasMore, filteredProducts]);
 
-  // Reset when search changes
+  // Reset when search, categories, or stores change
   useEffect(() => {
     setDisplayedProducts([]);
     setPage(1);
     setHasMore(true);
     setLoading(false);
-  }, [searchQuery]);
+  }, [searchQuery, selectedCategories, selectedStores]);
 
   // Load initial products after reset
   useEffect(() => {
@@ -184,9 +152,18 @@ export default function Home() {
       filteredProducts.length > 0 &&
       !loading
     ) {
-      loadMoreProducts();
+      const timer = setTimeout(() => {
+        loadMoreProducts();
+      }, 100);
+
+      return () => clearTimeout(timer);
     }
-  }, [displayedProducts.length, filteredProducts.length, loading]);
+  }, [
+    displayedProducts.length,
+    filteredProducts.length,
+    loading,
+    loadMoreProducts,
+  ]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -219,17 +196,51 @@ export default function Home() {
       <main className="container mx-auto px-4 py-8 grow">
         <LegalDisclaimer />
 
+        {/* Filters Row */}
+        <div className="flex flex-wrap gap-4 mb-6">
+          {/* Category Filter */}
+          <div className="flex-shrink-0">
+            <CategoryFilter
+              categories={allCategories}
+              selectedCategories={selectedCategories}
+              onCategoryChange={setSelectedCategories}
+              productCounts={categoryCounts}
+            />
+          </div>
+
+          {/* Store Filter */}
+          <div className="flex-shrink-0">
+            <StoreFilter
+              stores={allStores}
+              selectedStores={selectedStores}
+              onStoreChange={setSelectedStores}
+              productCounts={storeCounts}
+            />
+          </div>
+        </div>
+
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold dark:text-white">
             {searchQuery
               ? `Axtarış nəticələri: "${searchQuery}"`
+              : selectedCategories.length > 0 || selectedStores.length > 0
+              ? `${
+                  selectedCategories.length > 0
+                    ? selectedCategories.length + " kateqoriya"
+                    : ""
+                }${
+                  selectedCategories.length > 0 && selectedStores.length > 0
+                    ? " və "
+                    : ""
+                }${
+                  selectedStores.length > 0
+                    ? selectedStores.length + " mağaza"
+                    : ""
+                } seçildi`
               : "Populyar Məhsullar"}
           </h2>
           <span className="text-gray-600 dark:text-gray-400">
-            {displayedProducts.length > 0
-              ? displayedProducts.length
-              : filteredProducts.length}{" "}
-            məhsul
+            {filteredProducts.length} məhsul
           </span>
         </div>
 
@@ -237,11 +248,11 @@ export default function Home() {
         {displayedProducts.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {displayedProducts.map((product, index) => (
+              {displayedProducts.map((product) => (
                 <ProductCard
-                  key={`${product.id}-${index}`}
+                  key={product.id}
                   product={product}
-                  onCompare={setSelectedProduct}
+                  onCompare={handleCompareProduct}
                 />
               ))}
             </div>
@@ -275,7 +286,11 @@ export default function Home() {
               Başqa bir axtarış sözü cəhd edin
             </p>
             <button
-              onClick={() => setSearchQuery("")}
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedCategories([]);
+                setSelectedStores([]);
+              }}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer"
             >
               Bütün məhsulları göstər
