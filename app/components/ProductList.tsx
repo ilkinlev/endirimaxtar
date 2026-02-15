@@ -20,3 +20,6 @@ export interface Product {
 
 // The full output is an array of products
 export type ProductList = Product[];
+
+/** Category name -> product count */
+export type CategoryCount = Record<string, number>;

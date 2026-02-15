@@ -2,13 +2,14 @@
 import { Product, Store, CategoryCount } from "../components/ProductList";
 
 /**
- * Get the cheapest store for a product
+ * Get the cheapest store for a product (by final price: discounted or original)
  */
 export function getCheapestStore(product: Product): Store | null {
   if (product.stores.length === 0) return null;
 
+  const price = (s: Store) => s.discountedPrice ?? s.originalPrice;
   return product.stores.reduce((cheapest: Store, current: Store) =>
-    current.price < cheapest.price ? current : cheapest
+    price(current) < price(cheapest) ? current : cheapest
   );
 }
 
@@ -116,9 +117,13 @@ export function getUniqueStores(products: Product[]): string[] {
  * Sort products by price (cheapest first)
  */
 export function sortByPrice(products: Product[], ascending = true): Product[] {
+  const price = (p: Product) => {
+    const s = getCheapestStore(p);
+    return s ? (s.discountedPrice ?? s.originalPrice) : Infinity;
+  };
   return [...products].sort((a: Product, b: Product) => {
-    const priceA = getCheapestStore(a)?.price ?? Infinity;
-    const priceB = getCheapestStore(b)?.price ?? Infinity;
+    const priceA = price(a);
+    const priceB = price(b);
     return ascending ? priceA - priceB : priceB - priceA;
   });
 }
@@ -131,8 +136,8 @@ export function sortByDiscount(
   descending = true
 ): Product[] {
   return [...products].sort((a: Product, b: Product) => {
-    const discountA = getCheapestStore(a)?.discount ?? 0;
-    const discountB = getCheapestStore(b)?.discount ?? 0;
+    const discountA = getCheapestStore(a)?.discountRate ?? 0;
+    const discountB = getCheapestStore(b)?.discountRate ?? 0;
     return descending ? discountB - discountA : discountA - discountB;
   });
 }
@@ -143,7 +148,7 @@ export function sortByDiscount(
 export function getPromotionalProducts(products: Product[]): Product[] {
   return products.filter(
     (product: Product) =>
-      product.isPromotional && isPromotionValid(product.validUntil)
+      product.isPromotional && isPromotionValid((product as Product & { validUntil?: string }).validUntil)
   );
 }
 
@@ -162,7 +167,8 @@ export function calculateAveragePrice(products: Product[]): number {
 
   const totalPrice = products.reduce((sum: number, product: Product) => {
     const cheapest = getCheapestStore(product);
-    return sum + (cheapest?.price ?? 0);
+    const p = cheapest ? (cheapest.discountedPrice ?? cheapest.originalPrice) : 0;
+    return sum + p;
   }, 0);
 
   return totalPrice / products.length;
@@ -174,7 +180,7 @@ export function calculateAveragePrice(products: Product[]): number {
 export function calculateAverageDiscount(products: Product[]): number {
   const productsWithDiscount = products.filter((product: Product) => {
     const cheapest = getCheapestStore(product);
-    return cheapest && cheapest.discount && cheapest.discount > 0;
+    return cheapest && cheapest.discountRate != null && cheapest.discountRate > 0;
   });
 
   if (productsWithDiscount.length === 0) return 0;
@@ -182,7 +188,7 @@ export function calculateAverageDiscount(products: Product[]): number {
   const totalDiscount = productsWithDiscount.reduce(
     (sum: number, product: Product) => {
       const cheapest = getCheapestStore(product);
-      return sum + (cheapest?.discount ?? 0);
+      return sum + (cheapest?.discountRate ?? 0);
     },
     0
   );
