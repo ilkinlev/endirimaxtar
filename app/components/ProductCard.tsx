@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Product } from "./ProductList";
 
-interface ProductCardProps {
+export interface ProductCardProps {
   product: Product;
   onCompare: (product: Product) => void;
 }
@@ -11,19 +11,18 @@ interface ProductCardProps {
 export default function ProductCard({ product, onCompare }: ProductCardProps) {
   const [imageError, setImageError] = useState(false);
 
-  // Calculate prices correctly
-  // The price in data is ALREADY the discounted price (final price)
-  // We need to calculate the original price from it
+  // Calculate prices using the correct property names
   const storesWithPrices = product.stores.map((store) => {
-    const finalPrice = store.price; // This is already the discount price
-    const originalPrice = store.discount
-      ? store.price / (1 - store.discount / 100) // Calculate original from discount
-      : store.price;
+    // Use discountedPrice if available, otherwise use originalPrice
+    const finalPrice = store.discountedPrice || store.originalPrice;
+    const originalPrice = store.originalPrice;
+    const discount = store.discountRate;
 
     return {
       ...store,
       finalPrice,
       originalPrice,
+      discount,
     };
   });
 
@@ -41,14 +40,6 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
       ? product.image
       : fallbackImage;
 
-  // Check if promotional period is still valid
-  const isPromotionValid = () => {
-    if (!product.validUntil) return true;
-    const today = new Date();
-    const validUntil = new Date(product.validUntil);
-    return today <= validUntil;
-  };
-
   return (
     <div
       onClick={() => onCompare(product)}
@@ -64,7 +55,7 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
         />
 
         {/* Discount Badge */}
-        {cheapestStore.discount && isPromotionValid() && (
+        {cheapestStore.discount && cheapestStore.discount > 0 && (
           <div className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1.5 rounded-lg text-sm font-bold shadow-lg animate-pulse">
             -{cheapestStore.discount}%
           </div>
@@ -83,26 +74,15 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
         </div>
 
         {/* Promotional Badge */}
-        {product.isPromotional && isPromotionValid() && (
+        {product.isPromotional && (
           <div className="absolute bottom-2 left-2 bg-orange-500 text-white px-2 py-1 rounded text-xs font-bold">
             🔥 Aksiya
           </div>
         )}
-
-        {/* Valid Until Badge */}
-        {product.validUntil && isPromotionValid() && (
-          <div className="absolute bottom-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs">
-            {new Date(product.validUntil).toLocaleDateString("az-AZ", {
-              day: "numeric",
-              month: "short",
-            })}
-            -dək
-          </div>
-        )}
       </div>
 
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="font-bold text-lg mb-1 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors min-h-[3.5rem]">
+      <div className="p-4 flex flex-col grow">
+        <h3 className="font-bold text-lg mb-1 dark:text-white line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors min-h-14">
           {product.name}
         </h3>
 
@@ -134,7 +114,7 @@ export default function ProductCard({ product, onCompare }: ProductCardProps) {
             </span>
 
             <div className="text-right">
-              {cheapestStore.discount ? (
+              {cheapestStore.discount && cheapestStore.discount > 0 ? (
                 <div>
                   <p className="text-xs text-gray-400 line-through">
                     {cheapestStore.originalPrice.toFixed(2)} ₼

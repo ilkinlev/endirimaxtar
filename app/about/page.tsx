@@ -192,26 +192,38 @@ export default function AboutPage() {
         </div>
 
         {/* Stores We Cover */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-6">
-          <h2 className="text-2xl font-bold mb-4 dark:text-white flex items-center">
-            <span className="text-3xl mr-3">🏪</span>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-6 border border-gray-100 dark:border-gray-700">
+          <h2 className="text-2xl font-bold mb-1 dark:text-white flex items-center gap-3">
+            <span className="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-2xl" aria-hidden>
+              🏪
+            </span>
             Əhatə Etdiyimiz Marketlər
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <p className="font-bold text-lg dark:text-white">Bravo</p>
-            </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <p className="font-bold text-lg dark:text-white">BazarStore</p>
-            </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <p className="font-bold text-lg dark:text-white">Araz Market</p>
-            </div>
-            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <p className="font-bold text-lg dark:text-white">Oba</p>
-            </div>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            Qiymətləri müqayisə etdiyimiz marketlər
+          </p>
+          <div className="grid grid-cols-2 gap-4 sm:gap-6">
+            {[
+              { name: "Bravo", icon: "🛒" },
+              { name: "Araz Market", icon: "🛒" },
+              // { name: "BazarStore", icon: "🛒" },  // add back later
+              // { name: "Oba", icon: "🛒" },        // add back later
+            ].map((market) => (
+              <div
+                key={market.name}
+                className="group text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-700/80 border-2 border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md dark:hover:shadow-blue-900/20 transition-all duration-200 hover:-translate-y-0.5"
+              >
+                <span className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-white dark:bg-gray-600 text-2xl mb-3 group-hover:scale-110 transition-transform" aria-hidden>
+                  {market.icon}
+                </span>
+                <p className="font-bold text-lg dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {market.name}
+                </p>
+              </div>
+            ))}
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4 text-center">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-6 text-center flex items-center justify-center gap-2">
+            <span className="text-blue-500 dark:text-blue-400">+</span>
             Və tezliklə daha çox market əlavə ediləcək...
           </p>
         </div>

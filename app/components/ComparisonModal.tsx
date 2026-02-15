@@ -13,26 +13,19 @@ export default function ComparisonModal({
 }: ComparisonModalProps) {
   if (!product) return null;
 
-  // Calculate prices correctly
-  // The price in data is ALREADY the discounted price (final price)
-  // We need to calculate the original price from it
+  // Map Store (originalPrice, discountedPrice?, discountRate?) to display values
   const storesWithPrices = product.stores.map((store) => {
-    const finalPrice = store.price; // This is already the discount price
-    const originalPrice = store.discount 
-      ? store.price / (1 - store.discount / 100) // Calculate original from discount
-      : store.price;
-    
+    const finalPrice = store.discountedPrice ?? store.originalPrice;
     return {
       ...store,
       finalPrice,
-      originalPrice,
     };
   });
 
   const sortedStores = [...storesWithPrices].sort(
     (a, b) => a.finalPrice - b.finalPrice
   );
-  const cheapestFinalPrice = sortedStores[0].finalPrice;
+  const cheapestFinalPrice = sortedStores[0]?.finalPrice ?? 0;
 
   return (
     <div
@@ -82,8 +75,9 @@ export default function ComparisonModal({
 
           <div className="space-y-3">
             {sortedStores.map((store, index) => {
-              const isCheapest = store.finalPrice === cheapestFinalPrice;
-              const priceDiff = store.finalPrice - cheapestFinalPrice;
+              const finalPrice = Number(store.finalPrice);
+              const isCheapest = finalPrice === cheapestFinalPrice;
+              const priceDiff = finalPrice - cheapestFinalPrice;
 
               return (
                 <div
@@ -116,14 +110,14 @@ export default function ComparisonModal({
                             ƏN UCUZ
                           </span>
                         )}
-                        {store.discount && (
+                        {store.discountRate != null && (
                           <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">
-                            -{store.discount}%
+                            -{store.discountRate}%
                           </span>
                         )}
                       </div>
 
-                      {store.discount && (
+                      {store.discountedPrice != null && (
                         <p className="text-sm text-gray-500 dark:text-gray-400 line-through mt-1">
                           Əvvəl: {store.originalPrice.toFixed(2)} ₼
                         </p>
@@ -138,7 +132,7 @@ export default function ComparisonModal({
                             : "text-gray-900 dark:text-white"
                         }`}
                       >
-                        {store.finalPrice.toFixed(2)} ₼
+                        {finalPrice.toFixed(2)} ₼
                       </div>
                       {priceDiff > 0 && (
                         <p className="text-sm text-red-600 dark:text-red-400">
@@ -168,7 +162,7 @@ export default function ComparisonModal({
                 ilə müqayisədə{" "}
                 <strong className="text-green-600 dark:text-green-400 text-lg">
                   {(
-                    sortedStores[sortedStores.length - 1].finalPrice -
+                    (sortedStores[sortedStores.length - 1]?.finalPrice ?? 0) -
                     cheapestFinalPrice
                   ).toFixed(2)}{" "}
                   ₼

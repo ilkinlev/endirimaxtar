@@ -8,7 +8,21 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import { Product, Store, MergeStats } from "../app/components/ProductList";
+import { Product, Store } from "../app/components/ProductList";
+
+/** Product with optional fields that may exist in JSON */
+type ProductInput = Product & { validFrom?: string; validUntil?: string };
+
+/** Stats produced by the merge run */
+interface MergeStats {
+  originalCount: number;
+  mergedCount: number;
+  duplicatesRemoved: number;
+  totalStores: number;
+  multiStoreProducts: number;
+  singleStoreProducts: number;
+  processingTime: string;
+}
 
 console.log("📄 Starting product merge...\n");
 
@@ -20,7 +34,7 @@ const backupPath = path.join(__dirname, "../app/data/products-backup.json");
 // Read products
 console.log("📥 Reading products.json...");
 const rawData = fs.readFileSync(inputPath, "utf-8");
-const productsData: Product[] = JSON.parse(rawData);
+const productsData: ProductInput[] = JSON.parse(rawData);
 console.log(`   Found ${productsData.length} products\n`);
 
 // Create backup
@@ -29,12 +43,12 @@ fs.writeFileSync(backupPath, JSON.stringify(productsData, null, 2));
 console.log("   ✅ Backup saved to products-backup.json\n");
 
 // Merge function with proper typing
-function mergeProducts(products: Product[]): Product[] {
-  const map: Record<string, Product> = {};
+function mergeProducts(products: ProductInput[]): Product[] {
+  const map: Record<string, ProductInput> = {};
   let mergeCount = 0;
 
   for (let i = 0; i < products.length; i++) {
-    const product = products[i];
+    const product: ProductInput = products[i];
 
     // Create key: lowercase name + category
     const key = `${product.name.toLowerCase().trim()}_${product.category
@@ -46,10 +60,11 @@ function mergeProducts(products: Product[]): Product[] {
       mergeCount++;
 
       for (const store of product.stores) {
-        // Check if this exact store already exists
+        const storePrice = store.discountedPrice ?? store.originalPrice;
         const exists = map[key].stores.some(
           (s: Store) =>
-            s.name === store.name && Math.abs(s.price - store.price) < 0.01
+            s.name === store.name &&
+            Math.abs((s.discountedPrice ?? s.originalPrice) - storePrice) < 0.01
         );
 
         if (!exists) {
@@ -100,7 +115,7 @@ function mergeProducts(products: Product[]): Product[] {
 
   console.log(`   Processing: ${products.length}/${products.length} ✅\n`);
 
-  return Object.values(map);
+  return Object.values(map) as Product[];
 }
 
 // Merge products

@@ -68,6 +68,11 @@ export default function Home() {
     return counts;
   }, [allCategories]);
 
+  // Handle product comparison
+  const handleCompareProduct = useCallback((product: Product) => {
+    setSelectedProduct(product);
+  }, []);
+
   // Load more products
   const loadMoreProducts = useCallback(() => {
     if (loading || !hasMore) return;
@@ -118,7 +123,12 @@ export default function Home() {
 
       return () => clearTimeout(timer);
     }
-  }, [displayedProducts.length, filteredProducts.length]);
+  }, [
+    displayedProducts.length,
+    filteredProducts.length,
+    loading,
+    loadMoreProducts,
+  ]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -178,11 +188,11 @@ export default function Home() {
         {displayedProducts.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {displayedProducts.map((product) => (
+              {displayedProducts.map((product, index) => (
                 <ProductCard
-                  key={product.id}
+                  key={`${product.id}-${index}`}
                   product={product}
-                  onCompare={setSelectedProduct}
+                  onCompare={handleCompareProduct}
                 />
               ))}
             </div>

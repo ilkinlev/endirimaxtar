@@ -4,7 +4,7 @@ export default function LegalDisclaimer() {
   return (
     <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 mb-6">
       <div className="flex">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <svg
             className="h-5 w-5 text-blue-500"
             fill="currentColor"
