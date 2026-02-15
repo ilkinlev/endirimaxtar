@@ -8,10 +8,36 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import { Product, Store } from "../app/components/ProductList";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+/** Inline types so this script runs on Vercel without importing .tsx from app */
+interface Store {
+  name: string;
+  inStock: boolean;
+  originalPrice: number;
+  discountedPrice?: number;
+  discountRate?: number;
+  storeId?: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  image: string;
+  stores: Store[];
+  brand?: string;
+  isPromotional?: boolean;
+  lastUpdated: string;
+}
 
 /** Product with optional fields that may exist in JSON */
-type ProductInput = Product & { validFrom?: string; validUntil?: string };
+interface ProductInput extends Product {
+  validFrom?: string;
+  validUntil?: string;
+}
 
 /** Stats produced by the merge run */
 interface MergeStats {
