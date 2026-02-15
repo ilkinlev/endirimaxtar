@@ -77,10 +77,7 @@ export function useProductSearch(
     if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
       const prices = product.stores
         .filter((store) => store.inStock)
-        .map((store) => {
-          // Price in data is already the discount price
-          return store.price;
-        });
+        .map((store) => store.discountedPrice ?? store.originalPrice);
 
       if (prices.length === 0) return false;
 
