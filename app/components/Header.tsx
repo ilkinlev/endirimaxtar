@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function Header() {
+interface HeaderProps {
+  /** Called when the logo is clicked (e.g. clear search on home page) */
+  onLogoClick?: () => void;
+}
+
+export default function Header({ onLogoClick }: HeaderProps) {
   const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -36,7 +41,11 @@ export default function Header() {
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm transition-colors">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/">
+        <Link
+          href="/"
+          onClick={() => onLogoClick?.()}
+          className="block"
+        >
           <h1 className="text-3xl font-bold cursor-pointer">
             <span className="text-red-500">Endirim</span>
             <span className="text-gray-800 dark:text-white">Axtar</span>

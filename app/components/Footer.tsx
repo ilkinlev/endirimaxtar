@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function Footer() {
   const [showLegal, setShowLegal] = useState(false);
-  const [showContact, setShowContact] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -29,12 +29,12 @@ export default function Footer() {
           >
             Hüquqi Məlumat
           </button>
-          <button
-            onClick={() => setShowContact(!showContact)}
-            className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+          <Link
+            href="/about#contact"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
           >
-            Əlaqə
-          </button>
+            Bizimlə Əlaqə
+          </Link>
         </div>
 
         {/* Legal Information Popup */}
@@ -87,54 +87,6 @@ export default function Footer() {
 
             <button
               onClick={() => setShowLegal(false)}
-              className="mt-4 text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-            >
-              Bağla
-            </button>
-          </div>
-        )}
-
-        {/* Contact Information Popup */}
-        {showContact && (
-          <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 mb-6 text-sm">
-            <h3 className="font-bold text-lg dark:text-white mb-4">Əlaqə</h3>
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-blue-600 dark:text-blue-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Email
-                  </p>
-                  <a
-                    href="mailto:endirimaxtar@gmail.com"
-                    className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-                  >
-                    endirimaxtar@gmail.com
-                  </a>
-                </div>
-              </div>
-
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Suallarınız, təklifləriniz və ya əməkdaşlıq üçün bizimlə əlaqə
-                saxlayın.
-              </p>
-            </div>
-
-            <button
-              onClick={() => setShowContact(false)}
               className="mt-4 text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
             >
               Bağla
