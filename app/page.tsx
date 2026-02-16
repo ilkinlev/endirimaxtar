@@ -26,6 +26,9 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
 
   const observerTarget = useRef<HTMLDivElement>(null);
+  const isLoadingRef = useRef(false); // Prevent race conditions
+  const hasMoreRef = useRef(true); // Keep latest hasMore value for observer
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Products are already merged at build time!
   const products = productsData as Product[];
@@ -75,39 +78,64 @@ export default function Home() {
 
   // Load more products
   const loadMoreProducts = useCallback(() => {
-    if (loading || !hasMore) return;
+    // Guard against multiple simultaneous calls using refs (always current)
+    if (isLoadingRef.current || loading || !hasMoreRef.current) return;
 
+    isLoadingRef.current = true;
     setLoading(true);
 
-    // Simulate loading delay for smooth UX
-    setTimeout(() => {
-      const startIndex = (page - 1) * PRODUCTS_PER_PAGE;
+    // Use current page value directly instead of state
+    setPage((currentPage) => {
+      const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
       const endIndex = startIndex + PRODUCTS_PER_PAGE;
       const newProducts = filteredProducts.slice(startIndex, endIndex);
 
       if (newProducts.length === 0) {
+        hasMoreRef.current = false;
         setHasMore(false);
         setLoading(false);
-      } else {
-        setDisplayedProducts((prev) => [...prev, ...newProducts]);
-        setPage((prev) => prev + 1);
-
-        // Check if there are more products to load
-        if (endIndex >= filteredProducts.length) {
-          setHasMore(false);
+        isLoadingRef.current = false;
+        // Disconnect observer when no more products
+        if (observerRef.current && observerTarget.current) {
+          observerRef.current.unobserve(observerTarget.current);
         }
-
-        setLoading(false);
+        return currentPage;
       }
-    }, 300);
-  }, [page, loading, hasMore, filteredProducts]);
+
+      setDisplayedProducts((prev) => [...prev, ...newProducts]);
+
+      // Check if there are more products to load
+      if (endIndex >= filteredProducts.length) {
+        hasMoreRef.current = false;
+        setHasMore(false);
+        // Disconnect observer when no more products
+        if (observerRef.current && observerTarget.current) {
+          observerRef.current.unobserve(observerTarget.current);
+        }
+      }
+
+      // Small delay to prevent rapid-fire calls
+      setTimeout(() => {
+        setLoading(false);
+        isLoadingRef.current = false;
+      }, 300);
+
+      return currentPage + 1;
+    });
+  }, [loading, filteredProducts]);
 
   // Reset when search or categories change
   useEffect(() => {
     setDisplayedProducts([]);
     setPage(1);
+    hasMoreRef.current = true;
     setHasMore(true);
     setLoading(false);
+    isLoadingRef.current = false; // Reset loading ref
+    // Disconnect any existing observer
+    if (observerRef.current && observerTarget.current) {
+      observerRef.current.unobserve(observerTarget.current);
+    }
   }, [searchQuery, selectedCategories]);
 
   // Load initial products after reset
@@ -132,17 +160,34 @@ export default function Home() {
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
+    // Don't observe if there's no more to load
+    if (!hasMoreRef.current) return;
+
+    // Clean up previous observer
+    if (observerRef.current && observerTarget.current) {
+      observerRef.current.unobserve(observerTarget.current);
+      observerRef.current.disconnect();
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
+        // Use refs to check current state (always up-to-date)
+        if (
+          entries[0].isIntersecting &&
+          hasMoreRef.current &&
+          !isLoadingRef.current &&
+          !loading
+        ) {
           loadMoreProducts();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 } // Remove rootMargin to trigger only when actually at bottom
     );
 
+    observerRef.current = observer;
     const currentTarget = observerTarget.current;
-    if (currentTarget) {
+    
+    if (currentTarget && hasMoreRef.current) {
       observer.observe(currentTarget);
     }
 
@@ -150,8 +195,10 @@ export default function Home() {
       if (currentTarget) {
         observer.unobserve(currentTarget);
       }
+      observer.disconnect();
+      observerRef.current = null;
     };
-  }, [loadMoreProducts, hasMore, loading]);
+  }, [hasMore, loadMoreProducts, loading]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors flex flex-col">
@@ -204,8 +251,10 @@ export default function Home() {
               </div>
             )}
 
-            {/* Intersection Observer Target */}
-            <div ref={observerTarget} className="h-10 mt-8"></div>
+            {/* Intersection Observer Target - only show when there's more to load */}
+            {hasMore && (
+              <div ref={observerTarget} className="h-10 mt-8"></div>
+            )}
 
             {/* End of Results Message */}
             {!hasMore && !loading && (

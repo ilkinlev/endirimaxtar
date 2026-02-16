@@ -96,7 +96,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-          <p>© 2025 EndirimAxtar. Bütün hüquqlar qorunur.</p>
+          <p>© 2026 EndirimAxtar. Bütün hüquqlar qorunur.</p>
           {mounted && (
             <p className="mt-1">
               Son yenilənmə: {new Date().toLocaleDateString("az-AZ")}
