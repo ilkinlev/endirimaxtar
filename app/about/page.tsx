@@ -12,7 +12,7 @@ export default function AboutPage() {
         {/* Back Button */}
         <Link
           href="/"
-          className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline mb-6"
+          className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline hover:opacity-80 transition-opacity duration-200 mb-6"
         >
           <svg
             className="w-5 h-5 mr-2"
@@ -277,16 +277,27 @@ export default function AboutPage() {
         </div>
 
         {/* Contact */}
-        <div className="bg-linear-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-8 text-white text-center">
+        <div id="contact" className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-8 text-white text-center">
           <h2 className="text-2xl font-bold mb-4">Bizimlə Əlaqə</h2>
-          <p className="mb-6">
+          <p className="mb-4">
             Sualınız və ya təklifiniz var? Bizimlə əlaqə saxlayın!
           </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+            <a
+              href="mailto:endirimaxtar@gmail.com"
+              className="inline-flex items-center gap-2 bg-white text-blue-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 hover:scale-105 hover:shadow-lg transition-all duration-200"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              endirimaxtar@gmail.com
+            </a>
+          </div>
           <Link
             href="/"
-            className="inline-block bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors cursor-pointer"
+            className="text-white/90 hover:text-white text-sm underline transition-colors duration-200"
           >
-            Ana Səhifə
+            Ana səhifəyə qayıt
           </Link>
         </div>
       </main>
@@ -299,7 +310,7 @@ export default function AboutPage() {
             deyil. Tamamilə müstəqil platformayıq.
           </p>
           <p className="text-xs text-gray-500">
-            © 2025 EndirimAxtar. Bütün hüquqlar qorunur.
+            © 2026 EndirimAxtar. Bütün hüquqlar qorunur.
           </p>
         </div>
       </footer>

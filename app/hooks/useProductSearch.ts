@@ -19,18 +19,19 @@ export function useProductSearch(
   searchQuery: string,
   filters?: SearchFilters
 ) {
-  // Configure Fuse.js options
+  // Configure Fuse.js options: search name, category, and brand for better discovery
   const fuseOptions = useMemo(
     () => ({
       keys: [
-        { name: "name", weight: 1.0 }, // Product name ONLY (100% priority)
+        { name: "name", weight: 1.0 },       // Product name (highest priority)
+        { name: "category", weight: 0.7 },   // e.g. "araq" matches "Spirtli içkilər > Araqlar"
+        { name: "brand", weight: 0.5 },      // Brand name when present
       ],
-      threshold: 0.1, // VERY strict matching (was 0.15)
-      distance: 30, // Very short distance between characters (was 50)
-      ignoreLocation: false,
-      location: 0,
+      threshold: 0.4,   // Forgiving: typos like "Rolton" still match "Rollton"
+      distance: 100,    // Allow matches across longer text (name + category)
+      ignoreLocation: true,  // Match anywhere in text, not just start
       includeScore: true,
-      minMatchCharLength: 4, // Require at least 4 characters to match (was 3)
+      minMatchCharLength: 2,   // Short queries like "araq" (4 chars) work; 2 for "çay" etc.
       useExtendedSearch: false,
       shouldSort: true,
       findAllMatches: false,
@@ -103,16 +104,8 @@ export function useProductSearch(
     if (!searchQuery || searchQuery.trim() === "") {
       results = products;
     } else {
-      // Use Fuse.js for fuzzy search
+      // Use Fuse.js for fuzzy search (name + category + brand)
       const fuseResults = fuse.search(searchQuery);
-      
-      // Debug: Log search results
-      console.log('Search query:', searchQuery);
-      console.log('Fuse results:', fuseResults.slice(0, 5).map(r => ({
-        name: r.item.name,
-        score: r.score
-      })));
-      
       results = fuseResults.map((result) => result.item);
     }
 

@@ -155,8 +155,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors flex flex-col">
-      <Header />
-      <SearchBar onSearch={setSearchQuery} />
+      <Header onLogoClick={() => setSearchQuery("")} />
+      <SearchBar value={searchQuery} onSearch={setSearchQuery} />
 
       <main className="container mx-auto px-4 py-8 grow">
         <LegalDisclaimer />

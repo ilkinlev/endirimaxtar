@@ -1,17 +1,13 @@
 "use client";
 
-import { useState } from "react";
-
 interface SearchBarProps {
+  value: string;
   onSearch: (query: string) => void;
 }
 
-export default function SearchBar({ onSearch }: SearchBarProps) {
-  const [search, setSearch] = useState("");
-
-  const handleSearch = (value: string) => {
-    setSearch(value);
-    onSearch(value.toLowerCase());
+export default function SearchBar({ value, onSearch }: SearchBarProps) {
+  const handleSearch = (newValue: string) => {
+    onSearch(newValue.toLowerCase());
   };
 
   return (
@@ -21,7 +17,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           <input
             type="text"
             placeholder="Məhsul axtar..."
-            value={search}
+            value={value}
             onChange={(e) => handleSearch(e.target.value)}
             className="w-full px-4 py-3 pr-12 rounded-lg bg-white dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -41,7 +37,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
             </svg>
           </button>
 
-          {search && (
+          {value && (
             <button
               onClick={() => handleSearch("")}
               className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
